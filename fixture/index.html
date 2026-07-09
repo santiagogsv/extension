@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Script Traffic Light — fixture</title>
+  <style>
+    body { font: 16px/1.4 system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; }
+    .ok { color: #080; }
+    .fail { color: #a00; }
+    code { background: #f0f0f0; padding: 0.1em 0.3em; }
+    li { margin: 0.4em 0; }
+  </style>
+</head>
+<body>
+  <h1>Script Traffic Light fixture</h1>
+  <p>Open this file via a local server (same origin for “first-party” script), or use the paths below after serving this folder.</p>
+  <ul>
+    <li id="inline">Inline script: <span class="fail">no</span></li>
+    <li id="first">First-party <code>first.js</code>: <span class="fail">no</span></li>
+    <li id="third">“Third-party” remote script: <span class="fail">no</span></li>
+  </ul>
+  <p><small>Inline always runs (network-only blocking). First-party should run on yellow/green. Third-party only on green.</small></p>
+
+  <script>
+    document.querySelector("#inline span").textContent = "yes";
+    document.querySelector("#inline span").className = "ok";
+  </script>
+  <script src="first.js"></script>
+  <!-- Uses a public CDN URL so DNR treats it as third-party when page origin differs -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"
+          onload="document.querySelector('#third span').textContent='yes';document.querySelector('#third span').className='ok';"
+          onerror="document.querySelector('#third span').textContent='blocked';"></script>
+</body>
+</html>

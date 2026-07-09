@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Script Traffic Light",
+  "version": "0.1.2",
+  "description": "Minimal script control: block all, block external, or allow. Default + per-site.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "script-traffic-light@local",
+      "strict_min_version": "128.0"
+    }
+  },
+  "minimum_chrome_version": "121",
+  "permissions": [
+    "storage",
+    "declarativeNetRequest",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "scripts": ["background.js"]
+  },
+  "action": {
+    "default_title": "Script Traffic Light",
+    "default_popup": "popup.html"
+  }
+}
