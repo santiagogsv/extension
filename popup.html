@@ -2,46 +2,107 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Script Traffic Light</title>
+  <title>Traffic Light</title>
   <style>
-    body { margin: 0; font: 12px/1.3 system-ui, sans-serif; background: #1a1a1a; color: #e8e8e8; min-width: 200px; }
-    main { display: flex; gap: 14px; padding: 12px; }
-    section { flex: 1; text-align: center; }
-    h1 { margin: 0 0 6px; font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; }
-    .light { display: inline-flex; flex-direction: column; gap: 6px; padding: 8px 7px; background: #111; border-radius: 12px; border: 1px solid #333; }
-    .lamp { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #0006; padding: 0; cursor: pointer; opacity: .28; }
+    body {
+      margin: 0;
+      font: 12px/1.3 system-ui, sans-serif;
+      background: #1a1a1a;
+      color: #e8e8e8;
+      min-width: 300px;
+      max-width: 340px;
+    }
+    header {
+      display: grid;
+      grid-template-columns: 4.2rem 1fr 1fr;
+      gap: 6px;
+      padding: 10px 12px 4px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: .02em;
+    }
+    header span:not(:first-child) { text-align: center; }
+    #rows { padding: 0 10px 8px; }
+    .row {
+      display: grid;
+      grid-template-columns: 4.2rem 1fr 1fr;
+      gap: 6px;
+      align-items: center;
+      padding: 5px 0;
+      border-top: 1px solid #252525;
+    }
+    .lab {
+      font-size: 11px;
+      color: #bbb;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .light {
+      display: inline-flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 7px;
+      background: #111;
+      border-radius: 999px;
+      border: 1px solid #333;
+      margin: 0 auto;
+    }
+    .lamp {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid #0006;
+      padding: 0;
+      cursor: pointer;
+      opacity: .28;
+      flex-shrink: 0;
+    }
     .lamp:hover { opacity: .55; }
-    .lamp.on { opacity: 1; box-shadow: 0 0 8px currentColor; }
-    .lamp:disabled { opacity: .15; cursor: not-allowed; }
+    .lamp.on { opacity: 1; box-shadow: 0 0 7px currentColor; }
+    .lamp:disabled { opacity: .12; cursor: not-allowed; }
     .red { background: #e23; color: #f45; }
     .yellow { background: #ea0; color: #fc0; }
     .green { background: #2a4; color: #3c5; }
     .gray { background: #666; color: #999; }
-    .meta { margin: 6px 0 0; font-size: 10px; color: #888; word-break: break-all; white-space: pre-line; }
+    footer {
+      padding: 6px 12px 10px;
+      font-size: 9px;
+      color: #555;
+      line-height: 1.35;
+      border-top: 1px solid #252525;
+    }
+    #host {
+      padding: 0 12px 8px;
+      font-size: 10px;
+      color: #777;
+      word-break: break-all;
+    }
+    #err {
+      margin: 0;
+      padding: 0 12px 8px;
+      font-size: 10px;
+      color: #f66;
+      word-break: break-word;
+    }
   </style>
 </head>
 <body>
-  <main>
-    <section>
-      <h1>Default</h1>
-      <div class="light" id="def">
-        <button type="button" class="lamp red" data-m="block-all" title="Block all"></button>
-        <button type="button" class="lamp yellow" data-m="block-external" title="Block external"></button>
-        <button type="button" class="lamp green" data-m="allow" title="Allow all"></button>
-      </div>
-      <p class="meta" id="defL"></p>
-    </section>
-    <section>
-      <h1>This site</h1>
-      <div class="light" id="site">
-        <button type="button" class="lamp red" data-m="block-all" title="Block all"></button>
-        <button type="button" class="lamp yellow" data-m="block-external" title="Block external"></button>
-        <button type="button" class="lamp green" data-m="allow" title="Allow all"></button>
-        <button type="button" class="lamp gray" data-m="inherit" title="Use default"></button>
-      </div>
-      <p class="meta" id="siteL"></p>
-    </section>
-  </main>
+  <header>
+    <span>Type</span>
+    <span>Default</span>
+    <span>This site</span>
+  </header>
+  <p id="host">…</p>
+  <div id="rows"></div>
+  <p id="err" hidden></p>
+  <footer>
+    🔴 all · 🟡 third-party only · 🟢 allow · ⚪ inherit default.
+    Network requests only (not inline JS). Frame = iframes.
+  </footer>
   <script src="popup.js"></script>
 </body>
 </html>

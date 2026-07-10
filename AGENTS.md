@@ -2,7 +2,7 @@
 
 Extremely minimal **Firefox-first** WebExtension for controlling **network** script loads: **block all**, **block external only**, or **allow all**. Defaults plus per-site overrides. Private by design (no network, no telemetry, local storage only). Prefer standard WebExtensions APIs — especially **declarativeNetRequest (DNR)** — and the smallest possible codebase.
 
-**Cross-browser (best-effort, slim):** same package aims to load on modern **Chrome** (MV3 service worker) and modern **Safari** (Web Extensions + DNR). API access via `globalThis.browser ?? globalThis.chrome`. Manifest declares both `background.service_worker` and `background.scripts`. Firefox remains primary; other browsers need smoke-testing (permissions UX and DNR edge cases differ).
+**Cross-browser (slim, one source tree):** same package loads on modern **Firefox**, **Chrome** (MV3 service worker), and **Safari** (Web Extensions + DNR). API access via `globalThis.browser ?? globalThis.chrome`. Manifest declares both `background.service_worker` and `background.scripts` (+ `persistent: false`). Packaging via `./package.sh` → `dist/` (Chrome zip, Firefox zip, Safari Xcode project) — same pattern as host-block.
 
 ---
 
@@ -34,7 +34,7 @@ Changing either control **persists immediately** and **auto-reloads** the active
 - No analytics, crash reports, or extension-originated network  
 - No complex options page (popup only)  
 - No separate per-browser codebases or polyfill packages (one slim package)  
-- No App Store / Chrome Web Store release pipeline unless requested  
+- No bundler/framework; packaging is zip + Safari packager only (`package.sh`)
 
 ### Privacy & security principles
 
@@ -58,7 +58,7 @@ Changing either control **persists immediately** and **auto-reloads** the active
 | “External” definition | **Different origin** → DNR `domainType: "thirdParty"` | 2026-07-08 |
 | Hostname key | **Strip `www.`** (case-insensitive); store/match `example.com` | 2026-07-08 |
 | Extension name / id | **Script Traffic Light** / `script-traffic-light@local` | 2026-07-08 |
-| Cross-browser | **Firefox-first**; dual background + `browser??chrome`; modern Chrome/Safari best-effort | 2026-07-08 |
+| Cross-browser | **One source tree**; dual background + `browser??chrome`; `package.sh` for Chrome/Firefox/Safari | 2026-07-10 |
 
 ---
 
@@ -116,10 +116,12 @@ Use **Manifest V3** + **dynamic DNR rules**. On every settings change (and on st
 ```
 extension/
   AGENTS.md           # this file
-  manifest.json       # MV3, Gecko id, DNR + storage + tabs
-  background.js       # storage → DNR rule sync (~60 lines)
+  manifest.json       # MV3, Gecko id, dual background, DNR + storage + tabs
+  background.js       # storage → DNR rule sync
   popup.html          # markup + inline CSS
-  popup.js            # two lights, persist, reload (~65 lines)
+  popup.js            # two lights, persist, reload
+  package.sh          # Chrome / Firefox / Safari → dist/
+  icons/              # toolbar + store icons
   fixture/            # manual test page
 ```
 
@@ -253,11 +255,19 @@ Keep `buildRules` pure and short — easiest part to test mentally.
 - [ ] Safe behavior when `updateDynamicRules` fails (log once, don’t throw loops)  
 - [ ] Final permission review  
 
-### Phase 4 — Optional extras
+### Phase 4 — Cross-browser packaging
+
+- [x] Dual background (`service_worker` + `scripts` + `persistent: false`)  
+- [x] `browser ?? chrome`; DNR sync hardened for empty rule sets / Safari  
+- [x] `package.sh` → Chrome zip, Firefox zip, Safari Xcode (`dist/`)  
+- [x] `.gitignore` / `.signing.example`; README install + publish docs  
+
+### Phase 5 — Optional extras
 
 - [ ] Keyboard accessibility in popup  
 - [ ] Export/import JSON (user-triggered only)  
 - [ ] Session-only temporary allow (not persisted)  
+- [ ] Toolbar badge color = **effective** mode for current tab  
 
 ### Out of scope indefinitely (unless goals change)
 
@@ -265,7 +275,7 @@ Keep `buildRules` pure and short — easiest part to test mentally.
 - Ad-block filter lists  
 - Per-path or per-URL script rules  
 - Remote rules  
-- Cross-browser store packaging  
+- Separate per-browser codebases or polyfill packages
 
 ---
 

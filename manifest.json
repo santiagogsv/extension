@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Script Traffic Light",
-  "version": "0.1.3",
-  "description": "Minimal script control: block all, block external, or allow. Default + per-site.",
+  "version": "0.2.0",
+  "description": "Per-type traffic lights (script, frame, image, …): default + this site. Block all / third-party / allow.",
   "browser_specific_settings": {
     "gecko": {
       "id": "script-traffic-light@local",
@@ -23,7 +23,8 @@
   ],
   "background": {
     "service_worker": "background.js",
-    "scripts": ["background.js"]
+    "scripts": ["background.js"],
+    "persistent": false
   },
   "icons": {
     "16": "icons/icon-16.png",

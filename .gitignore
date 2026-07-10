@@ -1,0 +1,15 @@
+.DS_Store
+
+# Local Safari signing (DEVELOPMENT_TEAM=…)
+.signing
+
+# Generated packages / Xcode wrapper (./package.sh)
+dist/
+
+# Legacy root zip (use ./package.sh instead)
+script-traffic-light.zip
+
+# Xcode noise if a project is opened elsewhere
+**/xcuserdata/
+**/DerivedData/
+*.xcuserstate

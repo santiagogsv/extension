@@ -1,0 +1,4 @@
+# Copy to .signing and set your Team ID (gitignored).
+# Xcode → Settings → Accounts → Team → copy the Team ID, or:
+#   defaults read com.apple.dt.Xcode IDEProvisioningTeamManagerLastSelectedTeamID
+DEVELOPMENT_TEAM=XXXXXXXXXX
